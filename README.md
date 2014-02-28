@@ -11,3 +11,11 @@ Pour exécuter cette exemple :
     DEBUG=express:* node server.js
 
 * Rendez-vous avec votre navigateur à la [page de démarrage](http://localhost:3000)
+
+* Pour lancer les tests :
+
+    mocha
+    
+ou
+
+    npm test
