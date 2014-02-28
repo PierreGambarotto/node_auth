@@ -53,8 +53,9 @@ describe('Application Controller', function(){
       it('calls User#authenticate with (bob,secret)') 
       // à vous
       context('when the given credentials are incorrect', function(){
-        var stub = sinon.stub(User, 'authenticate')
+        var stub
         before(function(){
+          stub = sinon.stub(User, 'authenticate')
           // stub User#authenticate(bob, secret) to return false
           stub.withArgs(req.param.login, req.param.password).returns(false)
         })
@@ -64,8 +65,9 @@ describe('Application Controller', function(){
         })
       })
       context('when the authentication is successful', function(){
-        var stub = sinon.stub(User, 'authenticate')
+        var stub
         before(function(){
+          stub = sinon.stub(User, 'authenticate')
           // stub User#authenticate(bob, secret) to return true
         })
         it('redirects to /private', function(){
