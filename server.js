@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var util = require('util');
 app.set('view engine', 'jade');
+app.use(express.cookieParser());
+app.use(express.session());
 app.use(app.router);
 
 // model definition

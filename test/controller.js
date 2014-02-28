@@ -3,7 +3,9 @@ var sinon = require('sinon');
 
 var User = require('../lib/user');
 var controller = require('../lib/controller')(User),
-    req = {},
+    req = {
+      session: {}
+    },
     res = {
       render: function(){}
     }
@@ -38,8 +40,16 @@ describe('Application Controller', function(){
   })
 
   describe('#session_new', function(){
-    it('renders the template session/new')
+    it('renders the template session/new', function(){
     // à vous de jouer, c'est le même cas que #index
+      var mock = sinon.mock(res)
+      mock.expects('render').once().withExactArgs('session/new')
+      controller.session_new(req,res)
+      mock.verify()
+      mock.restore()
+    
+    })
+
   })
 
   describe('#session_create', function(){
@@ -50,8 +60,13 @@ describe('Application Controller', function(){
         req.param.password = 'secret'
         res.redirect = function(){}
       })
-      it('calls User#authenticate with (bob,secret)') 
-      // à vous
+      it('calls User#authenticate with (bob,secret)',function(){
+        var mock = sinon.mock(User);
+        mock.expects('authenticate').once().withExactArgs(req.param.login, req.param.password);
+        controller.session_create(req, res)
+        mock.verify()
+        mock.restore()
+      })
       context('when the given credentials are incorrect', function(){
         var stub
         before(function(){
@@ -59,7 +74,20 @@ describe('Application Controller', function(){
           // stub User#authenticate(bob, secret) to return false
           stub.withArgs(req.param.login, req.param.password).returns(false)
         })
-        it('renders the session/new template with the message "mauvais login/mot de passe"')
+        it('renders the session/new template with the message "mauvais login/mot de passe"', function(){
+          var mock = sinon.mock(res);
+          mock.expects('render').withExactArgs('session/new', {message: "mauvais login/mot de passe"})
+          controller.session_create(req, res)
+          mock.verify()
+          mock.restore()
+        })
+        it('does not redirect', function(){
+          var mock = sinon.mock(res);
+          mock.expects('redirect').never();
+          controller.session_create(req, res)
+          mock.verify()
+          mock.restore()
+        })
         after(function(){
           stub.restore()
         })
@@ -69,6 +97,7 @@ describe('Application Controller', function(){
         before(function(){
           stub = sinon.stub(User, 'authenticate')
           // stub User#authenticate(bob, secret) to return true
+          stub.withArgs(req.param.login, req.param.password).returns(true)
         })
         it('redirects to /private', function(){
           var mock = sinon.mock(res)
@@ -77,6 +106,10 @@ describe('Application Controller', function(){
           mock.verify()
           mock.restore()
         })
+        it('stores the login in the session', function(){
+          controller.session_create(req, res)
+          req.session.login.should.eql(req.param.login)
+        });
         after(function(){
           stub.restore()
         })
