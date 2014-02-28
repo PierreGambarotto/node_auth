@@ -23,7 +23,7 @@ var routes = Object.keys(app.routes).reduce(function(acc, verb){
   return acc.concat(app.routes[verb]);
 }, []);
 
-console.log(inspect(routes, {depth: null}));
+//console.log(inspect(routes, {depth: null}));
 
 /* route is something like
  * {

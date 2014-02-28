@@ -4,8 +4,10 @@ var util = require('util');
 app.set('view engine', 'jade');
 app.use(app.router);
 
+// model definition
+var User = require('./lib/user');
 // controllers definition
-var controller = require('./lib/controller');
+var controller = require('./lib/controller')(User);
 // routing
 require('./lib/routes')(app, controller);
 
