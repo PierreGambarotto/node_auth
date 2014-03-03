@@ -56,6 +56,9 @@ describe('Application', function(){
     it('handles get /private', function(){
       routes.should.containDeep([{path:'/private', method:'get'}]);
     })
+    it('handles get /private/very_private', function(){
+      routes.should.containDeep([{path:'/private/very_private', method:'get'}]);
+    })
     it('handles get /logout', function(){
       routes.should.containDeep([{path:'/logout', method:'get'}]);
     })

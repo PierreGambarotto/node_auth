@@ -2,8 +2,11 @@ var express = require('express');
 var app = express();
 var util = require('util');
 app.set('view engine', 'jade');
+// to populate req.body with POST params
+app.use(express.bodyParser())
 app.use(express.cookieParser());
-app.use(express.session());
+// secret option is mandatory
+app.use(express.session({secret: 'secret12345'}));
 app.use(app.router);
 
 // model definition
